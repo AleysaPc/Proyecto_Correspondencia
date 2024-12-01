@@ -1,6 +1,37 @@
-<h1>Documentos Registrados</h1>
-<ul>
-    {% for documento in documentos %}
-        <li>{{ documento.titulo }} - {{ documento.destinatario }}</li>
-    {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block listaDocumento %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<h1>Lista de Documentos Recibidos</h1>
+<table class="tabla-documentos">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Fecha</th>
+            <th>Institución</th>
+            <th>Referencia</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for documento in documentos %}
+        <tr>
+            <td>{{ documento.codigo }}</td>
+            <td>{{ documento.fecha|date:"d/m/y" }}</td>
+            <td>{{ documento.institucion }}</td>
+            <td>{{ documento.referencia }}</td>
+            <td>{{ documento.estado }}</td>
+            <td>
+                <a href="{% url 'correspondencia:documento_detalle' documento.pk %}">Ver</a> |
+                <a href="{% url 'correspondencia:editar_documento' documento.pk %}">Editar</a> |
+                <a href="{% url 'correspondencia:eliminar_documento' documento.pk %}" 
+                   onclick="return confirm('¿Estás seguro de que quieres eliminar este documento?')">Eliminar</a>
+            </td>
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

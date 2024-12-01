@@ -101,4 +101,110 @@
       font-size: 14px;
     }
   }
-  
+  .tabla-documentos {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.tabla-documentos th, .tabla-documentos td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.tabla-documentos th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.tabla-documentos tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabla-documentos tr:hover {
+    background-color: #f1f1f1;
+}
+
+.tabla-documentos td a {
+    color: #007BFF;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.tabla-documentos td a:hover {
+    background-color: #007BFF;
+    color: white;
+}
+/* Agregar las reglas CSS que te proporcioné */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+  background-color: #fff;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.panel {
+  flex: 1;
+  margin: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.panel h2 {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.panel p {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.documento_detalle {
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+.documento_detalle p {
+  margin: 0;
+}
+
+.documento_visualizacion {
+  text-align: center;
+}
+
+.documento_visualizacion iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  border-radius: 8px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.back-link:hover {
+  background-color: #0056b3;
+}

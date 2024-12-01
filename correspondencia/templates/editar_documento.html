@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block registrarDocumento %}
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-container">
+      <h2>Editar Documento</h2>
+      
+      <!-- Paneles en dos columnas -->
+      <div class="form-row">
+        <!-- Panel 1: Información General -->
+        <div class="panel">
+          <h3>Información General</h3>
+          <div class="form-group">
+            <label for="id_codigo">Código:</label>
+            {{ form.codigo }}  <!-- El código puede no ser editable dependiendo de tu modelo -->
+          </div>
+  
+          <div class="form-group">
+            <label for="id_fecha">Fecha:</label>
+            {{ form.fecha }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_hora">Hora:</label>
+            {{ form.hora }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_referencia">Referencia:</label>
+            {{ form.referencia }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_institucion">Institución:</label>
+            {{ form.institucion }}
+          </div>
+        </div>
+  
+        <!-- Panel 2: Detalles del Documento -->
+        <div class="panel">
+          <h3>Detalles del Documento</h3>
+          <div class="form-group">
+            <label for="id_remitente">Remitente:</label>
+            {{ form.remitente }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_cargoRemitente">Cargo del Remitente:</label>
+            {{ form.cargoRemitente }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_observacion">Observación:</label>
+            {{ form.observacion }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_fojas">Fojas:</label>
+            {{ form.fojas }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_estado">Estado:</label>
+            {{ form.estado }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_archivo">Archivo:</label>
+            {{ form.archivo }}
+          </div>
+  
+          <div class="form-group">
+            <label for="id_destinatario">Destinatario:</label>
+            {{ form.destinatario }}
+          </div>
+        </div>
+      </div>
+  
+      <!-- Botón centrado -->
+      <div class="form-group btn-container">
+        <button type="submit" class="btn-submit">Guardar Cambios</button>
+      </div>
+    </div>
+</form>
+  
+{% endblock %}
