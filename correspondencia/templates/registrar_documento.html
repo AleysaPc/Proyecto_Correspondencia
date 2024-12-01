@@ -1,0 +1,18 @@
+<h1>Registrar Documento</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Formulario para registrar el documento -->
+    {{ form.as_p }}
+
+    <!-- Panel desplegable para seleccionar destinatarios -->
+    <!--<label for="destinatarios">Seleccionar destinatarios:</label>-->
+    <select name="destinatarios" id="destinatarios" multiple>
+        {% for usuario in usuarios %}
+            <option value="{{ usuario.email }}">{{ usuario.email }}</option>
+        {% endfor %}
+    </select>
+    
+    <br><br>
+    <button type="submit">Registrar y Enviar</button>
+</form>
