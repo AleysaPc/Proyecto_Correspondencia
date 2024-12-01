@@ -16,7 +16,7 @@ def registrar_documento(request):
             # Enviar correo electrónico al destinatario
             send_mail(
                 subject='Nuevo documento registrado',
-                message=f'Se ha registrado un nuevo documento: {documento.titulo}',
+                message=f'Se ha registrado un nuevo documento: {documento.codigo}',
                 from_email='isatest172813@gmail.com',  # Cambia esto
                 recipient_list=[documento.destinatario],
                 fail_silently=False,
