@@ -28,20 +28,12 @@
             padding: 20px;
             margin: 10px;
             width: 48%;
-            /* Ajusta el tamaño del panel */
         }
 
         /* Estilo para los títulos dentro de los paneles */
         h2 {
             font-size: 1.5em;
             color: #333;
-        }
-
-        /* Ajustes para el iframe del documento */
-        .documento_visualizacion iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
         }
 
         /* Estilo para el enlace de retroceso */
@@ -57,6 +49,22 @@
 
         .back-link:hover {
             background-color: #45a049;
+        }
+
+        /* Estilo para la lista de visualizaciones */
+        .visualizaciones {
+            margin-top: 20px;
+        }
+
+        .visualizaciones table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .visualizaciones th, .visualizaciones td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 
@@ -75,24 +83,35 @@
             <p><strong>Observación:</strong> {{ documento.observacion }}</p>
         </div>
 
-        <!-- Panel de Visualización del Documento -->
-        <div class="panel documento_visualizacion">
-            <h2>Vista Previa del Documento</h2>
-
-            {% if documento.archivo %}
-            <iframe src="{{ documento.archivo.url }}" width="100%" height="500px"></iframe>
+        <!-- Panel de Seguimiento de Visualización -->
+        <div class="panel visualizaciones">
+            <h2>Seguimiento de Visualización</h2>
+            {% if visualizaciones %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visualizacion in visualizaciones %}
+                            <tr>
+                                <td>{{ visualizacion.usuario }}</td>
+                                <td>{{ visualizacion.fecha_visualizacion|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
-            <p>No hay archivo disponible para visualizar.</p>
+                <p>Aún no ha sido visualizado por ningún usuario.</p>
             {% endif %}
-
-
-
         </div>
-
     </div>
+
     <div class="container">
         <a class="back-link" href="{% url 'correspondencia:lista_documentos' %}">Volver a la lista de documentos</a>
-
+        <a href="{% url 'correspondencia:seguimiento_documento' documento.pk %}">Ver Seguimiento</a>
     </div>
 
 </body>

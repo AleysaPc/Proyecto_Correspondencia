@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguimiento del Documento</title>
+</head>
+<body>
+    <h1>Seguimiento del Documento: {{ documento.codigo }}</h1>
+    
+    <p><strong>Referencia:</strong> {{ documento.referencia }}</p>
+    <p><strong>Institución:</strong> {{ documento.institucion }}</p>
+    <p><strong>Remitente:</strong> {{ documento.remitente }}</p>
+    
+    <h3>Estado de visualización: {{ estado_visualizacion }}</h3>
+    {% if estado_visualizacion == "Visto" %}
+        <p>Este documento ha sido visualizado.</p>
+    {% else %}
+        <p>Este documento no ha sido visualizado aún.</p>
+    {% endif %}
+    
+    <!-- Si el archivo PDF está disponible, proporcionamos un enlace -->
+    {% if documento.archivo_pdf %}
+        <p><a href="{{ document.archivo_pdf.url }}" target="_blank">Ver documento en PDF</a></p>
+    {% else %}
+        <p>El documento no está disponible en formato PDF.</p>
+    {% endif %}
+</body>
+</html>
