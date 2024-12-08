@@ -61,7 +61,8 @@
             border-collapse: collapse;
         }
 
-        .visualizaciones th, .visualizaciones td {
+        .visualizaciones th,
+        .visualizaciones td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -87,24 +88,26 @@
         <div class="panel visualizaciones">
             <h2>Seguimiento de Visualización</h2>
             {% if visualizaciones %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Fecha y Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for visualizacion in visualizaciones %}
-                            <tr>
-                                <td>{{ visualizacion.usuario }}</td>
-                                <td>{{ visualizacion.fecha_visualizacion|date:"Y-m-d H:i" }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Correo Usuario</th>
+                        <th>Fecha de Visualización</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visualizacion in visualizaciones %}
+                    <tr>
+                        <td>{{ visualizacion.usuario }}</td>
+                        <td>{{ visualizacion.fecha_visualizacion }}</td>
+                        <td>{{ visualizacion.accion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-                <p>Aún no ha sido visualizado por ningún usuario.</p>
+            <p>Aún no ha sido visualizado por ningún usuario.</p>
             {% endif %}
         </div>
     </div>

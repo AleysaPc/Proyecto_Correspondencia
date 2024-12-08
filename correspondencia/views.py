@@ -1,16 +1,25 @@
 from datetime import timezone
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from .forms import DocumentoForm
 from django.core.mail import send_mail
 from .models import Documento, Visualizacion
 from django.utils import timezone
+from django.utils.timezone import now
 
 
 # Página principal
 def index(request):
     return render(request, 'index.html')
+
+# Función para generar el enlace
+def generar_enlace(request, documento, correo_usuario):
+    enlace = request.build_absolute_uri(
+        reverse('correspondencia:seguimiento_documento', kwargs={'pk': documento.pk})
+    )
+    enlace_con_correo = f"{enlace}?correo={correo_usuario}"
+    return enlace_con_correo
 
 # Registrar un documento
 def registrar_documento(request):
@@ -19,11 +28,12 @@ def registrar_documento(request):
         if form.is_valid():
             documento = form.save()
 
-            enlace = request.build_absolute_uri(reverse('correspondencia:seguimiento_documento', kwargs={'pk': documento.pk}))
+            # Obtener el correo del destinatario (suponiendo que está en el campo 'destinatario')
+            correo_destinatario = documento.destinatario
 
-
-
-
+            # Llamar a la función para generar el enlace
+            enlace = generar_enlace(request, documento, correo_destinatario)
+            
             mensaje_adicional = f'''
                 Se ha registrado un nuevo documento con los siguientes detalles:
                 Código: {documento.codigo}
@@ -33,8 +43,8 @@ def registrar_documento(request):
                 Institución: {documento.institucion}
                 Remitente: {documento.remitente}
                 Observación: {documento.observacion}
-                fojas: {documento.fojas}
-                estado:{documento.estado}
+                Fojas: {documento.fojas}
+                Estado: {documento.estado}
 
                 Puedes ver el documento aquí: {enlace}
                 '''
@@ -48,9 +58,11 @@ def registrar_documento(request):
                 fail_silently=False,
             )
 
+            # Registrar la visualización (si el destinatario es el usuario que está viendo el documento)
             Visualizacion.objects.create(
-                usuario=documento.destinatario,
-                documento=documento
+                usuario=correo_destinatario,  # Correo del destinatario
+                documento=documento,
+                accion='No Visto',  # Inicialmente lo creamos como No Visto
             )
 
             # Redirigir a la vista de detalle pasando el documento.id
@@ -60,13 +72,19 @@ def registrar_documento(request):
 
     return render(request, 'registrar_documento.html', {'form': form})
 
-
 # Detalle de un documento
 def documento_detalle(request, pk):
-    # Obtener el documento por su PK desde la URL
+    # Obtener el documento por su primary key (pk)
     documento = get_object_or_404(Documento, pk=pk)
-    return render(request, 'documento_detalle.html', {'documento': documento})
 
+    # Obtener las visualizaciones asociadas al documento
+    visualizaciones = Visualizacion.objects.filter(documento=documento)
+
+    # Renderizar la plantilla con los detalles del documento y las visualizaciones
+    return render(request, 'documento_detalle.html', {
+        'documento': documento,
+        'visualizaciones': visualizaciones,
+    })
 # Lista de documentos
 def lista_documentos(request):
     documentos = Documento.objects.all()
@@ -95,25 +113,54 @@ def eliminar_documento(request, pk):
     return redirect('correspondencia:lista_documentos')  # Redirige a la lista de documentos
 
 
-
 def seguimiento_documento(request, pk):
+    # Obtener el documento por su primary key (pk)
     documento = get_object_or_404(Documento, pk=pk)
-    usuario = request.user  # O el usuario que está visualizando el documento
 
-    # Verificar si ya se ha registrado la visualización para este usuario
-    visualizacion, created = Visualizacion.objects.get_or_create(
-        documento=documento,
-        usuario=usuario,
-        defaults={'fecha_visualizacion': timezone.now()}
-    )
+    # Obtener el correo electrónico del usuario desde los parámetros GET
+    correo_usuario = request.GET.get('correo')
 
-    # Obtener las visualizaciones
+    # Valor predeterminado para el estado de visualización
+    estado_visualizacion = "No Visto"
+
+    if correo_usuario:
+        # Buscar si ya existe una visualización para este documento y usuario
+        visualizacion = Visualizacion.objects.filter(
+            documento=documento,
+            usuario=correo_usuario
+        ).first()  # Usamos `first()` para obtener la primera coincidencia si existe
+
+        # Si no existe la visualización, se crea
+        if not visualizacion:
+            visualizacion = Visualizacion.objects.create(
+                documento=documento,
+                usuario=correo_usuario,
+                fecha_visualizacion=now()  # Establecemos la fecha de visualización
+            )
+            estado_visualizacion = "Visto"  # Lo marcamos como "Visto" al crearlo
+
+        # Si ya existe la visualización, se verifica si tiene fecha de visualización
+        elif visualizacion.fecha_visualizacion:
+            estado_visualizacion = "Visto"  # Si ya tiene fecha de visualización, es "Visto"
+        else:
+            # Si no tiene fecha, lo marcamos como "No Visto"
+            estado_visualizacion = "No Visto"
+
+    # Si no se pasó un correo (esto aplica a los administradores o vistas generales)
+    else:
+        # Verificar si el documento ha sido visualizado por alguien (admins)
+        visualizaciones = Visualizacion.objects.filter(documento=documento)
+        if visualizaciones.exists():
+            estado_visualizacion = "Visto"
+        else:
+            estado_visualizacion = "No Visto"
+
+    # Obtener todas las visualizaciones del documento
     visualizaciones = Visualizacion.objects.filter(documento=documento)
-    estado_visualizacion = 'Visto' if visualizacion.fecha_visualizacion else 'No Visto'
 
-    return render(request, 'documento_detalle.html', {
+    # Pasar la información a la plantilla
+    return render(request, 'seguimiento_documento.html', {
         'documento': documento,
+        'visualizaciones': visualizaciones,
         'estado_visualizacion': estado_visualizacion,
-        'visualizaciones': visualizaciones
     })
-

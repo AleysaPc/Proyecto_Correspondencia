@@ -1,5 +1,6 @@
 from datetime import timezone
 from django.db import models
+from django.utils.timezone import now
 
 class Documento(models.Model):
     
@@ -25,11 +26,7 @@ class Documento(models.Model):
         return None
     
 class Visualizacion(models.Model):
+    usuario = models.CharField(max_length=100)
     documento = models.ForeignKey(Documento, on_delete=models.CASCADE)
-    usuario = models.EmailField()
-    fecha_visualizacion = models.DateTimeField(null=True, blank=True)
-    accion = models.CharField(max_length=100, choices=[('Visto', 'Visto'), ('No Visto', 'No Visto')], default='No Visto')
-
-    def __str__(self):
-        return f"Visualización de {self.documento.codigo} por {self.usuario}"
-
+    accion = models.CharField(max_length=50)  # Este es el campo donde probablemente se presenta el error
+    fecha_visualizacion = models.DateTimeField(auto_now_add=True)
