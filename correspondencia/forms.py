@@ -5,7 +5,7 @@ class DocumentoForm(forms.ModelForm):
     class Meta:
         model = Documento
         fields = ['fecha', 'hora', 'referencia', 'institucion', 'remitente', 'cargoRemitente', 
-                  'observacion', 'fojas', 'estado', 'archivo', 'destinatario']  # No incluimos 'codigo' porque es generado automáticamente
+                  'observacion', 'fojas', 'estado', 'archivo', 'destinatario','tipo_documento']  # No incluimos 'codigo' porque es generado automáticamente
 
     # Personalizamos los widgets
     def __init__(self, *args, **kwargs):

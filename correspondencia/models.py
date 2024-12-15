@@ -3,7 +3,12 @@ from django.db import models
 from django.utils.timezone import now
 
 class Documento(models.Model):
-    
+
+    TIPOS_DOCUMENTO = [
+        ('enviado', 'Enviado'),
+        ('recibido', 'Recibido'),
+    ]
+     
     codigo = models.CharField(max_length=5)
     fecha = models.DateField()
     hora = models.TimeField()
@@ -16,10 +21,11 @@ class Documento(models.Model):
     estado = models.CharField(max_length=20)
     archivo = models.FileField(upload_to='documentos/')
     destinatario = models.EmailField()
+    tipo_documento = models.CharField(max_length=10, choices=TIPOS_DOCUMENTO, default='recibido')
    
     def __str__(self):
         return self.codigo
-    
+        
     def get_pdf_url(self):
         if self.archivo:
             return self.archivo.url

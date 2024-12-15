@@ -7,87 +7,116 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-container">
-      <h2>Registrar Documento</h2>
-      
-      <!-- Paneles en dos columnas -->
-      <div class="form-row">
-        <!-- Panel 1: Información General -->
-        <div class="panel">
-          <h3>Información General</h3>
-          <div class="form-group">
-            <label for="id_codigo">Código:</label>
-            {{ form.codigo }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_fecha">Fecha:</label>
-            {{ form.fecha }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_hora">Hora:</label>
-            {{ form.hora }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_referencia">Referencia:</label>
-            {{ form.referencia }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_institucion">Institución:</label>
-            {{ form.institucion }}
-          </div>
+  {% csrf_token %}
+  <div class="form-container">
+    <h2>Registrar Documento</h2>
+
+    <div class="form-group">
+      <input type="radio" id="enviado" name="tipo_documento" value="enviado" required>
+      <label for="enviado">Enviado</label>
+
+      <input type="radio" id="recibido" name="tipo_documento" value="recibido">
+      <label for="recibido">Recibido</label>
+    </div>
+
+    <!-- Paneles en dos columnas -->
+    <div class="form-row">
+      <!-- Panel 1: Información General -->
+      <div class="panel">
+        <h3>Información General</h3>
+        <div class="form-group">
+          <label for="id_codigo">Código:</label>
+          {{ form.codigo }}
         </div>
-  
-        <!-- Panel 2: Detalles del Documento -->
-        <div class="panel">
-          <h3>Detalles del Documento</h3>
-          <div class="form-group">
-            <label for="id_remitente">Remitente:</label>
-            {{ form.remitente }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_cargoRemitente">Cargo del Remitente:</label>
-            {{ form.cargoRemitente }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_observacion">Observación:</label>
-            {{ form.observacion }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_fojas">Fojas:</label>
-            {{ form.fojas }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_estado">Estado:</label>
-            {{ form.estado }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_archivo">Archivo:</label>
-            {{ form.archivo }}
-          </div>
-  
-          <div class="form-group">
-            <label for="id_destinatario">Destinatario:</label>
-            {{ form.destinatario }}
-          </div>
+
+        <div class="form-group">
+          <label for="id_fecha">Fecha:</label>
+          {{ form.fecha }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_hora">Hora:</label>
+          {{ form.hora }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_referencia">Referencia:</label>
+          {{ form.referencia }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_institucion">Institución:</label>
+          {{ form.institucion }}
         </div>
       </div>
-  
-      <!-- Botón centrado -->
-      <div class="form-group btn-container">
-        <button type="submit" class="btn-submit">Registrar Documento</button>
+
+      <!-- Panel 2: Detalles del Documento -->
+      <div class="panel">
+        <h3>Detalles del Documento</h3>
+        <div class="form-group">
+          <label for="id_remitente">Remitente:</label>
+          {{ form.remitente }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_cargoRemitente">Cargo del Remitente:</label>
+          {{ form.cargoRemitente }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_observacion">Observación:</label>
+          {{ form.observacion }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_fojas">Fojas:</label>
+          {{ form.fojas }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_estado">Estado:</label>
+          {{ form.estado }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_archivo">Archivo:</label>
+          {{ form.archivo }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_destinatario">Destinatario:</label>
+          {{ form.destinatario }}
+        </div>
       </div>
     </div>
-  </form>
-  
-  
+
+    <!-- Botón centrado -->
+    <div class="form-group btn-container">
+      <button type="submit" class="btn-submit">Registrar Documento</button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const tipoDocumentoRadios = document.getElementsByName("tipo_documento");
+      const camposEnviado = document.getElementById("campos-enviado");
+      const camposRecibido = document.getElementById("campos-recibido");
+
+      // Detectar cambio en el tipo de documento
+      tipoDocumentoRadios.forEach(radio => {
+        radio.addEventListener("change", function () {
+          if (this.value === "enviado") {
+            camposEnviado.style.display = "block";
+            camposRecibido.style.display = "none";
+          } else if (this.value === "recibido") {
+            camposEnviado.style.display = "none";
+            camposRecibido.style.display = "block";
+          }
+        });
+      });
+    });
+  </script>
+
+</form>
+
+
 {% endblock %}

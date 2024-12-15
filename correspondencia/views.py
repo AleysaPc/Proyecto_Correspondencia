@@ -2,6 +2,8 @@ from datetime import timezone
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
+
+from proyecto_correspondencia import settings
 from .forms import DocumentoForm
 from django.core.mail import send_mail
 from .models import Documento, Visualizacion
@@ -32,10 +34,14 @@ def registrar_documento(request):
             correo_destinatario = documento.destinatario
 
             # Llamar a la función para generar el enlace
-            enlace = generar_enlace(request, documento, correo_destinatario)
+            enlace = documento.get_pdf_url()
+            if not enlace:
+                raise ValueError("El documento no tiene un archivo asociado.")
+
             
             mensaje_adicional = f'''
                 Se ha registrado un nuevo documento con los siguientes detalles:
+                Tipo de Documento: {"Enviado" if documento.tipo_documento == "enviado" else "Recibido"}
                 Código: {documento.codigo}
                 Fecha: {documento.fecha}
                 Hora: {documento.hora}
@@ -46,9 +52,9 @@ def registrar_documento(request):
                 Fojas: {documento.fojas}
                 Estado: {documento.estado}
 
-                Puedes ver el documento aquí: {enlace}
+                Puedes ver el documento aquí:  {settings.SITE_URL}{enlace}
                 '''
-                
+            
             # Enviar correo electrónico al destinatario
             send_mail(
                 subject='Nuevo documento registrado',
@@ -121,7 +127,7 @@ def seguimiento_documento(request, pk):
     correo_usuario = request.GET.get('correo')
 
     # Valor predeterminado para el estado de visualización
-    estado_visualizacion = "No Visto"
+    estado_visualizacion = "Visto"
 
     if correo_usuario:
         # Buscar si ya existe una visualización para este documento y usuario

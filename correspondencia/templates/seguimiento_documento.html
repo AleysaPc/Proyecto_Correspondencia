@@ -1,35 +1,95 @@
+{% extends 'base.html' %}
+{% block seguimientoDocumento %}
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seguimiento de Documento</title>
+    <style>
+        /* Contenedor principal */
+        .container {
+            display: flex;
+            gap: 20px;
+            justify-content: center; /* Centra los paneles horizontalmente */
+            flex-wrap: wrap; /* Hace que los paneles sean responsivos */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo del panel izquierdo */
+        .panel-izquierdo {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 30%; /* Ocupa el 30% del contenedor */
+            box-sizing: border-box;
+            min-width: 300px; /* Asegura un tamaño mínimo */
+        }
+
+        /* Estilo del panel derecho */
+        .panel-derecho {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 70%; /* Ocupa el 70% del contenedor */
+            box-sizing: border-box;
+            min-width: 400px; /* Asegura un tamaño mínimo */
+        }
+
+        /* Estilo adicional para encabezados */
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
     <h1>Seguimiento del Documento</h1>
-    
-    <div>
-        <h2>Detalles del Documento</h2>
-        <p><strong>Código:</strong> {{ documento.codigo }}</p>
-        <p><strong>Fecha:</strong> {{ documento.fecha }}</p>
-        <p><strong>Hora:</strong> {{ documento.hora }}</p>
-        <p><strong>Referencia:</strong> {{ documento.referencia }}</p>
-        <p><strong>Institución:</strong> {{ documento.institucion }}</p>
-        <p><strong>Remitente:</strong> {{ documento.remitente }}</p>
-        <p><strong>Observación:</strong> {{ documento.observacion }}</p>
-        <p><strong>Fojas:</strong> {{ documento.fojas }}</p>
-    </div>
+    <div class="container">
+        <!-- Panel izquierdo -->
+        <div class="panel-izquierdo">
+            <h3>Detalles del Documento</h3>
+            <p><strong>Código:</strong> {{ documento.codigo }}</p>
+            <p><strong>Fecha:</strong> {{ documento.fecha }}</p>
+            <p><strong>Hora:</strong> {{ documento.hora }}</p>
+            <p><strong>Referencia:</strong> {{ documento.referencia }}</p>
+            <p><strong>Institución:</strong> {{ documento.institucion }}</p>
+            <p><strong>Remitente:</strong> {{ documento.remitente }}</p>
+            <p><strong>Observación:</strong> {{ documento.observacion }}</p>
+            <p><strong>Fojas:</strong> {{ documento.fojas }}</p>
+        </div>
 
-    <div>
-        <h3>Estado de Visualización</h3>
-        <p><strong>Estado:</strong> {{ estado_visualizacion }}</p> <!-- Aquí se muestra si el documento ha sido visto o no -->
-    </div>
-
-    <div>
-        <h3>Historial de Visualizaciones</h3>
-        {% if visualizaciones %}
+        <!-- Panel derecho -->
+        <div class="panel-derecho">
+            <h3>Estado y Historial</h3>
+            <p><strong>Estado de Visualización:</strong> {{ estado_visualizacion }}</p>
+            <h4>Historial de Visualizaciones</h4>
+            {% if visualizaciones %}
             <table>
                 <thead>
                     <tr>
@@ -40,19 +100,24 @@
                 </thead>
                 <tbody>
                     {% for visualizacion in visualizaciones %}
-                        <tr>
-                            <td>{{ visualizacion.usuario }}</td>
-                            <td>{{ visualizacion.fecha_visualizacion }}</td>
-                            <td>{{ visualizacion.accion }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ visualizacion.usuario }}</td>
+                        <td>{{ visualizacion.fecha_visualizacion }}</td>
+                        <td>{{ visualizacion.accion }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        {% else %}
+            {% else %}
             <p>No se ha registrado ninguna visualización para este documento.</p>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
-
-    <a href="{% url 'correspondencia:documento_detalle' pk=documento.pk %}">Volver al detalle del documento</a>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'correspondencia:documento_detalle' pk=documento.pk %}">Volver al detalle del documento</a>
+    </div>
 </body>
+
 </html>
+
+{% endblock %}

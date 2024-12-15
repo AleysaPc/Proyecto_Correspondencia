@@ -16,18 +16,34 @@
         /* Contenedor principal */
         .container {
             display: flex;
+            flex-wrap: wrap;
+            /* Permite que los paneles se ajusten en diferentes líneas si es necesario */
             justify-content: space-between;
             padding: 20px;
+            max-width: 1200px;
+            /* Limita el ancho máximo del contenedor */
+            margin: 0 auto;
+            /* Centra el contenedor */
         }
 
         /* Estilo para los paneles */
-        .panel {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .panel.documento_detalle {
+            width: 100%;
+            /* Ocupa todo el ancho disponible */
+            margin: 0;
+            /* Elimina márgenes externos */
             padding: 20px;
-            margin: 10px;
-            width: 48%;
+            /* Ajusta el espacio interno */
+            box-sizing: border-box;
+            /* Asegura que el padding no exceda el ancho total */
+        }
+
+        /* Responsividad para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .panel {
+                width: 100%;
+                /* Los paneles ocuparán el ancho completo en pantallas pequeñas */
+            }
         }
 
         /* Estilo para los títulos dentro de los paneles */
@@ -84,7 +100,7 @@
             <p><strong>Observación:</strong> {{ documento.observacion }}</p>
         </div>
 
-        <!-- Panel de Seguimiento de Visualización -->
+        <!-- Panel de Seguimiento de Visualización 
         <div class="panel visualizaciones">
             <h2>Seguimiento de Visualización</h2>
             {% if visualizaciones %}
@@ -111,11 +127,12 @@
             {% endif %}
         </div>
     </div>
-
-    <div class="container">
-        <a class="back-link" href="{% url 'correspondencia:lista_documentos' %}">Volver a la lista de documentos</a>
-        <a href="{% url 'correspondencia:seguimiento_documento' documento.pk %}">Ver Seguimiento</a>
-    </div>
-
+-->
+        <!-- Enlaces adicionales -->
+        <div class="container">
+            <a class="back-link" href="{% url 'correspondencia:lista_documentos' %}">Volver a la lista de documentos</a>
+            <a class="back-link" href="{% url 'correspondencia:seguimiento_documento' documento.pk %}">Ver
+                Seguimiento</a>
+        </div>
 </body>
 {% endblock %}
